@@ -64,7 +64,7 @@ public class Player extends Entity implements InputProcessor {
 		downLeftAnim.setPlayMode(PlayMode.LOOP);
 		downRightAnim.setPlayMode(PlayMode.LOOP);
 		
-		attackAnim = RoomTest.makeAnimation(new Texture("entities/player/AttackAnim.png"), 1 / 10f, 2, 5, 32, 32);
+		attackAnim = RoomTest.makeAnimation(new Texture("entities/player/attackanim.png"), 1 / 10f, 2, 5, 32, 32);
 		
 		currAnim = upAnim;
 	}
