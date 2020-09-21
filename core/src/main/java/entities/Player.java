@@ -16,7 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
@@ -316,8 +316,8 @@ public class Player extends Entity implements InputProcessor {
 		
 		player.setUserData(this);
 		
-		PolygonShape playerShape = new PolygonShape();
-		playerShape.setAsBox(0.5f, 0.5f);
+		CircleShape playerShape = new CircleShape();
+		playerShape.setRadius(0.5f);
 		
 		player.createFixture(playerShape, 0);
 		
