@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,6 +37,8 @@ public class Player extends Entity implements InputProcessor {
 	private Animation<TextureRegion> upLeftAnim, upRightAnim, downLeftAnim, downRightAnim;
 	private Animation<TextureRegion> attackAnim;
 	
+	private ArrayList<Item> items;
+	
 	private float moveTime, attackTime;
 	
 	public Player(float x, float y, float width, float height, World world) {
@@ -42,6 +46,8 @@ public class Player extends Entity implements InputProcessor {
 		createBody(world);
 		
 		velocity = new Vector2();
+		
+		items = new ArrayList<Item>();
 		
 		Texture spriteSheet = new Texture("entities/player/spritesheet.png");
 		TextureRegion[][] regions = TextureRegion.split(spriteSheet, 32, 32);
@@ -290,6 +296,14 @@ public class Player extends Entity implements InputProcessor {
 		playerShape.dispose();
 		
 		setBody(player);
+	}
+	
+	public void addItem(Item item) {
+		items.add(item);
+	}
+	
+	public void removeItem(Item item) {
+		items.remove(item);
 	}
 	
 	public boolean getInteracting() {

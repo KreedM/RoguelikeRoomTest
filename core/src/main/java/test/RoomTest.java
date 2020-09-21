@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import entities.Block;
 import entities.Door;
 import entities.Dummy;
+import entities.Gun;
 import entities.Interactable;
 import entities.Player;
 
@@ -47,6 +48,7 @@ public class RoomTest extends ApplicationAdapter {
 	private Player player;
 	private Dummy dummy;
 	private Door door;
+	private Gun gun;
 	
 	public void create() {
 		Gdx.input.setCursorCatched(true);
@@ -76,6 +78,7 @@ public class RoomTest extends ApplicationAdapter {
 		player = new Player(1, 1, 2, 2, world);
 		door = new Door(8, 4, 2, 2, world);
 		dummy = new Dummy(17, 4, 2, 2, world);
+		gun = new Gun(3, 3, 0.5f, 0.5f, world);
 		
 		Gdx.input.setInputProcessor(player);
 	}
@@ -110,6 +113,7 @@ public class RoomTest extends ApplicationAdapter {
 		dummy.draw(batch);
 		player.draw(batch);
 		door.draw(batch);
+		gun.draw(batch);
 		batch.end();
 		
 		box2dDebugRenderer.render(world, viewport.getCamera().combined);
