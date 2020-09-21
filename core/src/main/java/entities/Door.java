@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -14,6 +15,7 @@ public class Door extends Entity implements Interactable {
 	private boolean opened;
 	private Texture doorOpened, doorClosed;
 	private Filter filter;
+	private Fixture doorFixture;
 	
 	public Door(float x, float y, float width, float height, World world) {
 		super(x, y, width, height);
@@ -34,10 +36,10 @@ public class Door extends Entity implements Interactable {
 		else
 			filter.maskBits = -1;
 
-		getBody().getFixtureList().get(0).setFilterData(filter);
+		doorFixture.setFilterData(filter);
 	}
 
-	public void processCollision() {}
+	public void processCollision(Entity entity) {}
 
 	public void createBody(World world) {
 		BodyDef doorDef = new BodyDef();
@@ -51,7 +53,10 @@ public class Door extends Entity implements Interactable {
 		PolygonShape box = new PolygonShape();
 		box.setAsBox(getWidth() / 2, getHeight() / 2);
 		
-		door.createFixture(box, 0);
+		doorFixture = door.createFixture(box, 0);
+		
+		filter.categoryBits = 2;
+		doorFixture.setFilterData(filter);
 
 		box.dispose();
 		

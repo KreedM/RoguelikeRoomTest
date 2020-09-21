@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -76,7 +78,7 @@ public class Dummy extends Entity implements Interactable {
 		interacting = true;
 	}
 	
-	public void processCollision() {}
+	public void processCollision(Entity entity) {}
 
 	public void createBody(World world) {
 		BodyDef dummyDef = new BodyDef();
@@ -91,7 +93,11 @@ public class Dummy extends Entity implements Interactable {
 		PolygonShape dummyShape = new PolygonShape();
 		dummyShape.setAsBox(0.5f, 0.5f);
 		
-		dummy.createFixture(dummyShape, 0);
+		Fixture dummyFixture = dummy.createFixture(dummyShape, 0);
+		
+		Filter dummyFilter = new Filter();
+		dummyFilter.categoryBits = 2;
+		dummyFixture.setFilterData(dummyFilter);
 		
 		dummyShape.dispose();
 		

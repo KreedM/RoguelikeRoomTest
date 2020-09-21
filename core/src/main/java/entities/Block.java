@@ -3,6 +3,8 @@ package entities;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -13,8 +15,6 @@ public class Block extends Entity {
 		super(x, y, width, height);
 		createBody(world);
 	}
-
-	public void processCollision() {}
 
 	public void createBody(World world) {
 		BodyDef tileDef = new BodyDef();
@@ -30,7 +30,11 @@ public class Block extends Entity {
 		PolygonShape tileShape = new PolygonShape();
 		tileShape.setAsBox(getWidth() / 2, getWidth() / 2);
 		
-		tile.createFixture(tileShape, 0);
+		Fixture tileFixture = tile.createFixture(tileShape, 0);
+		
+		Filter tileFilter = new Filter();
+		tileFilter.categoryBits = 2;
+		tileFixture.setFilterData(tileFilter);
 		
 		tileShape.dispose();
 		
@@ -40,6 +44,8 @@ public class Block extends Entity {
 	public void draw(Batch batch) {}
 
 	public void act(float delta) {}
+	
+	public void processCollision(Entity entity) {}
 
 	public void dispose() {}
 }

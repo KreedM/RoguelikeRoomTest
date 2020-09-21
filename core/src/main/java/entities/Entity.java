@@ -14,11 +14,15 @@ public abstract class Entity {
 	private float rotation;
 	private final Color color = new Color(1, 1, 1, 1);
 	
+	public Entity() {
+		
+	}
+	
 	public Entity(float x, float y, float width, float height) {
 		setBounds(x, y, width, height);
 	}
 	
-	public abstract void processCollision();
+	public abstract void processCollision(Entity entity);
 	
 	public abstract void createBody(World world);
 	

@@ -2,14 +2,18 @@ package entities;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -23,12 +27,14 @@ public class Player extends Entity implements InputProcessor {
 	private static final float SPEED = 4;
 	
 	private Vector2 velocity;
+	private Vector3 cursorPos;
 	private float direction;
 	
 	private boolean left, right, up, down;
 	private boolean leftHold, rightHold, upHold, downHold;
 	private boolean attacking;
 	private boolean interacting;
+	private boolean using;
 
 	private byte xDir, yDir, prevXDir, prevYDir;
 	
@@ -37,15 +43,20 @@ public class Player extends Entity implements InputProcessor {
 	private Animation<TextureRegion> upLeftAnim, upRightAnim, downLeftAnim, downRightAnim;
 	private Animation<TextureRegion> attackAnim;
 	
+	private OrthographicCamera cam;
 	private ArrayList<Item> items;
+	private int currItem;
 	
 	private float moveTime, attackTime;
 	
-	public Player(float x, float y, float width, float height, World world) {
+	public Player(float x, float y, float width, float height, RoomTest test) {
 		super(x, y, width, height);
-		createBody(world);
+		createBody(test.world);
+		
+		cam = (OrthographicCamera) test.viewport.getCamera();
 		
 		velocity = new Vector2();
+		cursorPos = new Vector3();
 		
 		items = new ArrayList<Item>();
 		
@@ -79,6 +90,9 @@ public class Player extends Entity implements InputProcessor {
 		processDirection(delta);
 		
 		processAnimations(delta);
+		
+		if (using && currItem < items.size() && items.get(currItem) != null)
+			items.get(currItem).use(this);
 	}
 	
 	public void draw(Batch batch) {
@@ -278,6 +292,20 @@ public class Player extends Entity implements InputProcessor {
 		return false;
 	}
 	
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if(button == Input.Buttons.LEFT)
+			using = true;
+		
+		return true;
+	}
+
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		if(button == Input.Buttons.LEFT)
+			using = false;
+		
+		return true;
+	}
+	
 	public void createBody(World world) {
 		BodyDef playerDef = new BodyDef();
 		playerDef.type = BodyType.DynamicBody;
@@ -298,6 +326,15 @@ public class Player extends Entity implements InputProcessor {
 		setBody(player);
 	}
 	
+	public float getCursorDirection() {
+		cursorPos.x = Gdx.input.getX();
+		cursorPos.y = Gdx.input.getY();
+		
+		cam.unproject(cursorPos);
+		
+		return MathUtils.radiansToDegrees * MathUtils.atan2(cursorPos.y - getY() - getHeight() / 2, cursorPos.x - getX() - getWidth() / 2);
+	}
+	
 	public void addItem(Item item) {
 		items.add(item);
 	}
@@ -316,17 +353,13 @@ public class Player extends Entity implements InputProcessor {
 	
 	public boolean keyTyped(char character) {return false;}
 
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {return false;}
-
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {return false;}
-
 	public boolean touchDragged(int screenX, int screenY, int pointer) {return false;}
 
 	public boolean mouseMoved(int screenX, int screenY) {return false;}
 
 	public boolean scrolled(int amount) {return false;}
 	
-	public void processCollision() {}
+	public void processCollision(Entity entity) {}
 	
 	public void dispose() {}
 }
