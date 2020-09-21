@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -50,17 +51,17 @@ public class Gun extends Entity implements Interactable, Item {
 		Body gun = world.createBody(gunDef);
 		gun.setUserData(this);
 		
-		PolygonShape gunBox = new PolygonShape();
-		gunBox.setAsBox(getWidth() / 2, getHeight() / 2);
+		CircleShape gunCircle = new CircleShape();
+		gunCircle.setRadius(getWidth() / 2);
 
-		Fixture gunFixture = gun.createFixture(gunBox, 0);
+		Fixture gunFixture = gun.createFixture(gunCircle, 0);
 		
 		Filter gunFilter = new Filter();
 		gunFilter.categoryBits = 2;
 		gunFilter.maskBits = 0;
 		gunFixture.setFilterData(gunFilter);
 		
-		gunBox.dispose();
+		gunCircle.dispose();
 		
 		setBody(gun);
 	}

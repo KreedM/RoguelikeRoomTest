@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
@@ -69,14 +70,14 @@ public class Bullet extends Entity implements Poolable {
 		Body bullet = world.createBody(bulletDef);
 		bullet.setUserData(this);
 		
-		PolygonShape bulletBox = new PolygonShape();
-		bulletBox.setAsBox(getWidth() / 2, getHeight() / 2);
+		CircleShape bulletCircle = new CircleShape();
+		bulletCircle.setRadius(getWidth() / 2);
 
-		Fixture bulletFixture = bullet.createFixture(bulletBox, 0);
+		Fixture bulletFixture = bullet.createFixture(bulletCircle, 0);
 	
 		bulletFixture.setFilterData(bulletFilter);
 		
-		bulletBox.dispose();
+		bulletCircle.dispose();
 		
 		bullet.setLinearVelocity(new Vector2(velocity, 0).rotate(direction));
 		

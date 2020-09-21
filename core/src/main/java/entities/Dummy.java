@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -90,8 +91,8 @@ public class Dummy extends Entity implements Interactable {
 		
 		dummy.setUserData(this);
 		
-		PolygonShape dummyShape = new PolygonShape();
-		dummyShape.setAsBox(0.5f, 0.5f);
+		CircleShape dummyShape = new CircleShape();
+		dummyShape.setRadius(0.5f);
 		
 		Fixture dummyFixture = dummy.createFixture(dummyShape, 0);
 		
