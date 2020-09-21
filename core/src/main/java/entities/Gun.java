@@ -1,6 +1,5 @@
 package entities;
 
-import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -20,7 +19,6 @@ public class Gun extends Entity implements Interactable, Item {
 	private World world;
 	
 	private Pool<Bullet> bulletPool;
-	private ArrayList<Bullet> bullets;
 	
 	private boolean claimed;
 	
@@ -32,7 +30,6 @@ public class Gun extends Entity implements Interactable, Item {
 		world = test.world;
 		
 		bulletPool = test.bulletPool;
-		bullets = test.bullets;
 		
 		gun = new Texture("entities/gun/gun.png");
 		
@@ -80,8 +77,7 @@ public class Gun extends Entity implements Interactable, Item {
 	public void use(Player player) {
 		if (coolDownTime >= COOLDOWN) {
 			Bullet newBullet = bulletPool.obtain();
-			newBullet.init(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 4, player.getCursorDirection(), null); //placeholder
-			bullets.add(newBullet);
+			newBullet.init(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 1, player.getCursorDirection(), null); //placeholder
 			
 			coolDownTime = 0;
 		}

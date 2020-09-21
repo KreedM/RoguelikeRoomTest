@@ -13,9 +13,9 @@ public class Lwjgl3Launcher {
 		Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
 		configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		
-		//return new Lwjgl3Application(new RoomTest(), configuration);
+		return new Lwjgl3Application(new RoomTest(), configuration);
 		
-		return new Lwjgl3Application(new RoomTest(), getDefaultConfiguration());
+		//return new Lwjgl3Application(new RoomTest(), getDefaultConfiguration());
 	}
 
 	private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {

@@ -33,7 +33,7 @@ import entities.Interactable;
 import entities.Player;
 
 public class RoomTest extends ApplicationAdapter {
-	private static final int BOX2D_VELOCITY_ITERATIONS = 24, BOX2D_POSITION_ITERATIONS = 24;
+	private static final int BOX2D_VELOCITY_ITERATIONS = 8, BOX2D_POSITION_ITERATIONS = 3;
 	private static final float BOX2D_TIME_STEP = 1 / 60f;
 	
 	public FitViewport viewport;
@@ -64,7 +64,6 @@ public class RoomTest extends ApplicationAdapter {
 	
 	public void create() {
 		Gdx.input.setCursorCatched(true);
-		Gdx.gl.glClearColor(0, 0, 0.2f, 0);
 		
 		viewport = new FitViewport(16, 9);
 		
@@ -111,11 +110,11 @@ public class RoomTest extends ApplicationAdapter {
 	
 	public void render() {
 		float time = Gdx.graphics.getDeltaTime();
-		
+
 		processActs(time);
 		
 		contacts.clear();
-		
+
 		box2DTime += time;
 		
 		if (time > 0) {
@@ -124,8 +123,9 @@ public class RoomTest extends ApplicationAdapter {
 				box2DTime -= time;
 			}
 		}
-		
+
 		processCollisions();
+
 		processPositions();
 		
 		cursorPos.x = Gdx.input.getX();
@@ -153,8 +153,6 @@ public class RoomTest extends ApplicationAdapter {
 		batch.end();
 		
 		box2dDebugRenderer.render(world, viewport.getCamera().combined);
-		
-		System.out.println(world.getBodyCount());
 	}
 	
 	private void processActs(float time) {
@@ -174,17 +172,27 @@ public class RoomTest extends ApplicationAdapter {
 	public void processCollisions() {
 		removing.clear();
 		
-		for (Contact contact : contacts) {
+		for (Contact contact : contacts) { //A vs B collisions MUST BE DEFINED for it to work
 			Entity a = (Entity) contact.getFixtureA().getBody().getUserData(), b = (Entity) contact.getFixtureB().getBody().getUserData();
 			
-			if (a instanceof Bullet) {
+			if(a instanceof Bullet && b instanceof Bullet) {
 				((Bullet) a).processCollision(b);
-				removing.add(contact.getFixtureA().getBody());
+				if(!removing.contains(contact.getFixtureA().getBody()))
+					removing.add(contact.getFixtureA().getBody());
+				((Bullet) b).processCollision(a);
+				if(!removing.contains(contact.getFixtureB().getBody()))
+					removing.add(contact.getFixtureB().getBody());
+			}
+			else if (a instanceof Bullet) {
+				((Bullet) a).processCollision(b);
+				if(!removing.contains(contact.getFixtureA().getBody()))
+					removing.add(contact.getFixtureA().getBody());
 			}
 			else if(b instanceof Bullet) {
 				((Bullet) b).processCollision(a);
-				removing.add(contact.getFixtureB().getBody());
-			}
+				if(!removing.contains(contact.getFixtureB().getBody()))
+					removing.add(contact.getFixtureB().getBody());
+			}			
 		}
 		
 		for (Body body : removing)

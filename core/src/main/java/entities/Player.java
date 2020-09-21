@@ -24,7 +24,7 @@ import test.RoomTest;
 
 public class Player extends Entity implements InputProcessor {
 	private static final float FRAME_DURATION = 0.2f; 
-	private static final float SPEED = 4;
+	private static final float SPEED = 0.5f;
 	
 	private Vector2 velocity;
 	private Vector3 cursorPos;

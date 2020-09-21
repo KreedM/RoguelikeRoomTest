@@ -22,6 +22,8 @@ public class Bullet extends Entity implements Poolable {
 	private Pool<Bullet> bulletPool;
 	private ArrayList<Bullet> bullets;
 	private TextureAtlas bulletsAtlas;
+	private BodyDef bulletDef;
+	private Filter bulletFilter;
 	//private TextureRegion bulletImage; //This and type are used in conjunction with texture atlas
 	
 	private boolean removed;
@@ -32,14 +34,24 @@ public class Bullet extends Entity implements Poolable {
 		this.world = world;
 		this.bulletsAtlas = bulletAtlas;
 		placeholder = new Texture("particles/bullet/bullet.png");
+		
+		bulletDef = new BodyDef();
+		bulletDef.type = BodyType.DynamicBody;
+		bulletDef.bullet = true;
+		bulletFilter = new Filter();
 	}
 	
 	public void init(float x, float y, float velocity, float direction, String type) {
 		setBounds(x - 0.25f, y - 0.25f, 0.5f, 0.5f); //Placeholder, values decided later based on type
 		
-		createBody(world, velocity, direction);
+		bulletFilter.categoryBits = 2;
+		bulletFilter.maskBits = 2;
 		
+		createBody(world, velocity, direction);
+	
 		removed = false;
+		
+		bullets.add(this);
 	}
 
 	public void processCollision(Entity entity) {
@@ -48,13 +60,10 @@ public class Bullet extends Entity implements Poolable {
 
 		bullets.remove(this);
 		bulletPool.free(this);
-		removed = true;
 		reset();
 	}
 
 	public void createBody(World world, float velocity, float direction) {
-		BodyDef bulletDef = new BodyDef();
-		bulletDef.type = BodyType.DynamicBody;
 		bulletDef.position.set(getX() + getWidth() / 2, getY() + getHeight() / 2);
 		
 		Body bullet = world.createBody(bulletDef);
@@ -64,10 +73,7 @@ public class Bullet extends Entity implements Poolable {
 		bulletBox.setAsBox(getWidth() / 2, getHeight() / 2);
 
 		Fixture bulletFixture = bullet.createFixture(bulletBox, 0);
-		
-		Filter bulletFilter = new Filter();
-		bulletFilter.categoryBits = 2;
-		bulletFilter.maskBits = 2;
+	
 		bulletFixture.setFilterData(bulletFilter);
 		
 		bulletBox.dispose();
@@ -91,5 +97,7 @@ public class Bullet extends Entity implements Poolable {
 	
 	public void dispose() {}
 
-	public void reset() {} //Maybe something will be added later...
+	public void reset() {
+		removed = true;
+	} //Maybe something will be added later...
 }
