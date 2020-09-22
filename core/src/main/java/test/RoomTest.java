@@ -19,7 +19,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -27,7 +26,6 @@ import entities.Block;
 import entities.Bullet;
 import entities.Door;
 import entities.Dummy;
-import entities.Entity;
 import entities.Gun;
 import entities.Interactable;
 import entities.Player;
@@ -45,9 +43,8 @@ public class RoomTest extends ApplicationAdapter {
 	
 	public World world;
 	private ArrayList<Body> interacting;
-	private ArrayList<Body> removing;
-	private ArrayList<Contact> contacts;
 	private InteractCallback callback;
+	private TestListener contactListener;
 	private Box2DDebugRenderer box2dDebugRenderer;
 	private float box2DTime;
 	
@@ -72,11 +69,10 @@ public class RoomTest extends ApplicationAdapter {
 		Box2D.init();
 		world = new World(new Vector2(0, 0), true);
 		interacting = new ArrayList<Body>();
-		removing = new ArrayList<Body>();
 		callback = new InteractCallback(interacting);
 		box2dDebugRenderer = new Box2DDebugRenderer();
-		contacts = new ArrayList<Contact>();
-		world.setContactListener(new ContactListener(contacts));
+		contactListener = new TestListener(world);
+		world.setContactListener(contactListener);
 		
 		testRoom = new TmxMapLoader().load("maps/testroom.tmx");
 		renderer = new OrthogonalTiledMapRenderer(testRoom, 1 / 16f, batch);
@@ -117,8 +113,6 @@ public class RoomTest extends ApplicationAdapter {
 		else {
 			while (box2DTime >= BOX2D_TIME_STEP) {
 				processActs(BOX2D_TIME_STEP);
-	
-				contacts.clear();
 	
 				world.step(BOX2D_TIME_STEP, BOX2D_VELOCITY_ITERATIONS, BOX2D_POSITION_ITERATIONS);
 	
@@ -172,33 +166,7 @@ public class RoomTest extends ApplicationAdapter {
 	}
 	
 	public void processCollisions() {
-		removing.clear();
-		
-		for (Contact contact : contacts) { //A vs B collisions MUST BE DEFINED for it to work
-			Entity a = (Entity) contact.getFixtureA().getBody().getUserData(), b = (Entity) contact.getFixtureB().getBody().getUserData();
-			
-			if(a instanceof Bullet && b instanceof Bullet) {
-				((Bullet) a).processCollision(b);
-				if(!removing.contains(contact.getFixtureA().getBody()))
-					removing.add(contact.getFixtureA().getBody());
-				((Bullet) b).processCollision(a);
-				if(!removing.contains(contact.getFixtureB().getBody()))
-					removing.add(contact.getFixtureB().getBody());
-			}
-			else if (a instanceof Bullet) {
-				((Bullet) a).processCollision(b);
-				if(!removing.contains(contact.getFixtureA().getBody()))
-					removing.add(contact.getFixtureA().getBody());
-			}
-			else if(b instanceof Bullet) {
-				((Bullet) b).processCollision(a);
-				if(!removing.contains(contact.getFixtureB().getBody()))
-					removing.add(contact.getFixtureB().getBody());
-			}			
-		}
-		
-		for (Body body : removing)
-			world.destroyBody(body);
+		contactListener.process();
 		
 		if (player.getInteracting()) {
 			interacting.clear();
