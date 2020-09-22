@@ -32,7 +32,7 @@ import entities.Player;
 
 public class RoomTest extends ApplicationAdapter {
 	private static final int BOX2D_VELOCITY_ITERATIONS = 8, BOX2D_POSITION_ITERATIONS = 3;
-	private static final float BOX2D_TIME_STEP = 1 / 60f;
+	private static final float BOX2D_TIME_STEP = 1 / 120f;
 	
 	public FitViewport viewport;
 	
