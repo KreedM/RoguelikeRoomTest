@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Pool;
@@ -14,7 +13,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 
 public class Gun extends Entity implements Interactable, Item {
-	private static float COOLDOWN = 0.25f;
+	private static float COOLDOWN = 0.125f;
 	
 	private Texture gun;
 	private World world;
@@ -78,7 +77,7 @@ public class Gun extends Entity implements Interactable, Item {
 	public void use(Player player) {
 		if (coolDownTime >= COOLDOWN) {
 			Bullet newBullet = bulletPool.obtain();
-			newBullet.init(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 1, player.getCursorDirection(), null); //placeholder
+			newBullet.init(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 6, player.getCursorDirection(), null); //placeholder
 			
 			coolDownTime = 0;
 		}

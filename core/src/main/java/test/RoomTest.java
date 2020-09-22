@@ -107,26 +107,28 @@ public class RoomTest extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(player);
 	}
 	
-	
 	public void render() {
 		float time = Gdx.graphics.getDeltaTime();
 
-		processActs(time);
-		
-		contacts.clear();
-
 		box2DTime += time;
 		
-		if (time > 0) {
-			while (box2DTime >= time) {
+		if(box2DTime > 1)
+			box2DTime = 0;
+		else {
+			while (box2DTime >= BOX2D_TIME_STEP) {
+				processActs(BOX2D_TIME_STEP);
+	
+				contacts.clear();
+	
 				world.step(BOX2D_TIME_STEP, BOX2D_VELOCITY_ITERATIONS, BOX2D_POSITION_ITERATIONS);
-				box2DTime -= time;
+	
+				processCollisions();
+	
+				processPositions();
+	
+				box2DTime -= BOX2D_TIME_STEP;
 			}
 		}
-
-		processCollisions();
-
-		processPositions();
 		
 		cursorPos.x = Gdx.input.getX();
 		cursorPos.y = Gdx.input.getY();
