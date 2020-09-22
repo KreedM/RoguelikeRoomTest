@@ -91,7 +91,7 @@ public class RoomTest extends ApplicationAdapter {
 		bullets = new ArrayList<Bullet>();
 		bulletPool = new Pool<Bullet>() {
 		    protected Bullet newObject() {
-		        return new Bullet(bulletPool, bullets, world, null); //Give bullet atlas at some point
+		        return new Bullet(bulletPool, bullets, null); //Give bullet atlas at some point
 		    }
 		};
 		

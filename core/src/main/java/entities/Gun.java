@@ -77,7 +77,7 @@ public class Gun extends Entity implements Interactable, Item {
 	public void use(Player player) {
 		if (coolDownTime >= COOLDOWN) {
 			Bullet newBullet = bulletPool.obtain();
-			newBullet.init(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 6, player.getCursorDirection(), null); //placeholder
+			newBullet.init(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, 6, player.getCursorDirection(), null, world); //placeholder
 			
 			coolDownTime = 0;
 		}

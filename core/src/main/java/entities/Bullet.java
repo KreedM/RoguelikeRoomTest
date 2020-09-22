@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 
 public class Bullet extends Entity implements Poolable {
-	private World world;
+	//private World world;
 	private Texture placeholder;
 	private Pool<Bullet> bulletPool;
 	private ArrayList<Bullet> bullets;
@@ -28,10 +28,9 @@ public class Bullet extends Entity implements Poolable {
 	
 	private boolean removed;
 	
-	public Bullet(Pool<Bullet> bulletPool, ArrayList<Bullet> bullets, World world, TextureAtlas bulletAtlas) {
+	public Bullet(Pool<Bullet> bulletPool, ArrayList<Bullet> bullets, TextureAtlas bulletAtlas) {
 		this.bulletPool = bulletPool;
 		this.bullets = bullets;
-		this.world = world;
 		this.bulletsAtlas = bulletAtlas;
 		placeholder = new Texture("particles/bullet/bullet.png");
 		
@@ -41,7 +40,7 @@ public class Bullet extends Entity implements Poolable {
 		bulletFilter = new Filter();
 	}
 	
-	public void init(float x, float y, float velocity, float direction, String type) {
+	public void init(float x, float y, float velocity, float direction, String type, World world) {
 		setBounds(x - 0.25f, y - 0.25f, 0.5f, 0.5f); //Placeholder, values decided later based on type
 		
 		bulletFilter.categoryBits = 2;
